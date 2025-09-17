@@ -1,12 +1,12 @@
-const Heap = async (arr, n, i, setArr, setcomparing) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const Heap = async (arr, n, i, setArr, setComparing, speed) => {
   let largest = i;
   let left = 2 * i + 1;
   let right = 2 * i + 2;
 
-  setcomparing([i, left, right]);
-  await sleep(800);
+  setComparing([i, left, right]);
+  await sleep(speed);
 
   if (left < n && arr[left] > arr[largest]) {
     largest = left;
@@ -17,32 +17,33 @@ const Heap = async (arr, n, i, setArr, setcomparing) => {
   if (largest !== i) {
     await swap(arr, largest, i);
     setArr([...arr]);
-    await Heap(arr, n, largest,setArr, setcomparing);
+    await sleep(speed);
+    await Heap(arr, n, largest, setArr, setComparing, speed);
   }
 };
 
 const swap = async (arr, i, j) => {
-  let temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
 };
 
-export const HeapSort = async (arr, setArr, setcomparing) => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  let n = arr.length ;
+export const HeapSort = async (arr, setArr, setComparing, speed) => {
+  let n = arr.length;
 
-  for (let i = Math.floor(n / 2)-1; i >= 0; i--) {
-    await Heap(arr, n, i, setArr, setcomparing);
+  // Build max heap
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    await Heap(arr, n, i, setArr, setComparing, speed);
   }
 
-  for(let i=n-1;i>=0;i--){
-    await swap(arr,0,i);
-    setArr([...arr])
-    setcomparing([0,i]);
-    await sleep(800);
+  // Extract elements from heap one by one
+  for (let i = n - 1; i >= 0; i--) {
+    await swap(arr, 0, i);
+    setArr([...arr]);
+    setComparing([0, i]);
+    await sleep(speed);
 
-    await Heap(arr, i, 0, setArr, setcomparing);
-
+    await Heap(arr, i, 0, setArr, setComparing, speed);
   }
-   setcomparing([]);
+
+  // Clear highlights at the end
+  setComparing([]);
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BubbleSort } from './Sortings/BubbleSort';
 import { SelectionSort } from './Sortings/SelectionSort';
-import { InserionSOrt } from './Sortings/InsertionSort';
+import { InsertionSort } from './Sortings/InsertionSort';
 import { MergeSort } from './Sortings/MergeSort';
 import { QuickSort } from './Sortings/QuickSort';
 import { HeapSort } from './Sortings/HeapSort';
@@ -11,12 +11,14 @@ import { CountSort } from './Sortings/COuntSort';
 function App() {
   const [arr, setArr] = useState([]);
   const [comparing, setComparing] = useState([]);
+  const [speed, setSpeed] = useState(50); 
 
   const generateNewArray = () => {
     const random = Array.from({ length: 160 }, () =>
       Math.floor(Math.random() * 20 + 5)
     );
     setArr(random);
+    setComparing([]);
   };
 
   useEffect(() => {
@@ -26,7 +28,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#1f1f1f] flex flex-col items-center px-4 py-6 font-mono">
       <header className="w-full text-center text-3xl font-bold text-[#e2e8f0] mb-6">
-         Chalkboard Sorting Visualizer
+        Chalkboard Sorting Visualizer
       </header>
 
       {/* Sorting Bars */}
@@ -49,7 +51,7 @@ function App() {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-wrap justify-center gap-3 max-w-5xl">
+      <div className="flex flex-wrap justify-center gap-3 max-w-5xl mb-6">
         <button
           onClick={generateNewArray}
           className="px-4 py-2 text-sm rounded-md bg-[#334155] text-white hover:bg-[#475569] transition"
@@ -57,14 +59,28 @@ function App() {
           🎲 Generate New Array
         </button>
 
-        <SortButton label="Bubble Sort" onClick={() => BubbleSort(arr, setArr, setComparing, 10)} color="sky" />
-        <SortButton label="Selection Sort" onClick={() => SelectionSort(arr, setArr, setComparing)} color="lime" />
-        <SortButton label="Insertion Sort" onClick={() => InserionSOrt(arr, setArr, setComparing)} color="green" />
-        <SortButton label="Merge Sort" onClick={() => MergeSort(arr, setArr, setComparing)} color="amber" />
-        <SortButton label="Quick Sort" onClick={() => QuickSort(arr, setArr, setComparing)} color="rose" />
-        <SortButton label="Heap Sort" onClick={() => HeapSort(arr, setArr, setComparing)} color="violet" />
-        <SortButton label="Bucket Sort" onClick={() => BucketSort(arr, setArr, setComparing)} color="cyan" />
-        <SortButton label="Count Sort" onClick={() => CountSort(arr, setArr, setComparing)} color="slate" />
+        <SortButton label="Bubble Sort" onClick={() => BubbleSort(arr, setArr, setComparing, speed)} color="sky" />
+        <SortButton label="Selection Sort" onClick={() => SelectionSort(arr, setArr, setComparing, speed)} color="lime" />
+        <SortButton label="Insertion Sort" onClick={() => InsertionSort(arr, setArr, setComparing, speed)} color="green" />
+        <SortButton label="Merge Sort" onClick={() => MergeSort(arr, setArr, setComparing, speed)} color="amber" />
+        <SortButton label="Quick Sort" onClick={() => QuickSort(arr, setArr, setComparing, speed)} color="rose" />
+        <SortButton label="Heap Sort" onClick={() => HeapSort(arr, setArr, setComparing, speed)} color="violet" />
+        <SortButton label="Bucket Sort" onClick={() => BucketSort(arr, setArr, setComparing, speed)} color="cyan" />
+        <SortButton label="Count Sort" onClick={() => CountSort(arr, setArr, setComparing, speed)} color="slate" />
+      </div>
+
+      {/* Speed Slider */}
+      <div className="flex flex-col items-center gap-2 text-white">
+        <label className="text-sm">⚡ Sorting Speed: {speed} ms</label>
+        <input
+          type="range"
+          min="10"
+          max="500"
+          step="10"
+          value={speed}
+          onChange={(e) => setSpeed(Number(e.target.value))}
+          className="w-64 accent-pink-500"
+        />
       </div>
     </div>
   );
@@ -94,6 +110,5 @@ const SortButton = ({ label, onClick, color }) => {
     </button>
   );
 };
-
 
 export default App;

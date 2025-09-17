@@ -1,34 +1,47 @@
-import { InserionSOrt } from './InsertionSort';
+import { InsertionSort } from "./InsertionSort";
 
-export const BucketSort=async(arr, setArr, setcomparing, bucketCount=10)=>{
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-    let n= arr.length;
-    if(n<=1) return;
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const max =Math.max(...arr);
-    const min=Math.min(...arr);
+export const BucketSort = async (arr, setArr, setComparing, bucketCount = 10, speed) => {
+  let n = arr.length;
+  if (n <= 1) return;
 
-    const buckets = Array.from({length:bucketCount},()=>[]);
+  const max = Math.max(...arr);
+  const min = Math.min(...arr);
 
+  // Create empty buckets
+  const buckets = Array.from({ length: bucketCount }, () => []);
 
-    for(let i =0;i<n;i++){
-        const idx = Math.floor(((arr[i]-min)/(max-min+1))*bucketCount);
-        buckets[idx].push(arr[i]);
-    }
+  // Distribute elements into buckets
+  for (let i = 0; i < n; i++) {
+    const idx = Math.floor(((arr[i] - min) / (max - min + 1)) * bucketCount);
+    buckets[idx].push(arr[i]);
+  }
 
-    let index=0;
-    for(let b=0;b<bucketCount;b++){
-        if(buckets[b].length>0){
-            await InserionSOrt(buckets[b],setArr,setcomparing);
-            for(let k=0;k<buckets[b].length;k++){
-                arr[index]=buckets[b][k];
-                setArr([...arr])
-                setcomparing([index]);
-                index++;
-                await sleep(100);
-            }
+  // Sort each bucket with Insertion Sort
+  for (let b = 0; b < bucketCount; b++) {
+    if (buckets[b].length > 0) {
+      await InsertionSort(buckets[b], async (newBucket) => {
+        // When bucket is updated, merge back into main array for visualization
+        let tempArr = [];
+        let index = 0;
+        for (let bb = 0; bb < bucketCount; bb++) {
+          for (let val of buckets[bb]) {
+            tempArr[index++] = val;
+          }
         }
-    }
+        setArr([...tempArr]);
+      }, setComparing, speed);
 
-setcomparing([]);
-}
+      // Put sorted bucket back into main array
+      for (let k = 0; k < buckets[b].length; k++) {
+        arr[k] = buckets[b][k];
+        setArr([...arr]);
+        setComparing([k]);
+        await sleep(speed);
+      }
+    }
+  }
+
+  setComparing([]);
+};

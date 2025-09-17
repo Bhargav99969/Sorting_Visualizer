@@ -1,30 +1,25 @@
+export const SelectionSort = async (arr, setArr, setComparing, speed) => {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const n = arr.length;
 
+  for (let i = 0; i < n; i++) {
+    let smallIndex = i;
 
+    for (let j = i + 1; j < n; j++) {
+      setComparing([smallIndex, j]); // highlight current min & candidate
+      await sleep(speed);
 
-export const SelectionSort=async(arr,setArr,setcomparing)=>{
- const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
- const n = arr.length;
- 
-
- for(let i =0;i<n;i++){
-    let smallIndex =i;
-    for(let j =i+1;j<n;j++){
-          setcomparing([smallIndex, j]);
-          await sleep(100)
-         if(arr[smallIndex]>arr[j]){
-            smallIndex=j;
-         }
-         
+      if (arr[j] < arr[smallIndex]) {
+        smallIndex = j; // update smallest index
+      }
     }
-   if (smallIndex !== i) {
-      [arr[i], arr[smallIndex]] = [arr[smallIndex], arr[i]];
 
-    setArr([...arr]);
-    await sleep(100)
-    
- }
+    if (smallIndex !== i) {
+      [arr[i], arr[smallIndex]] = [arr[smallIndex], arr[i]]; // swap
+      setArr([...arr]);
+      await sleep(speed);
+    }
+  }
 
-}
-setcomparing([]);
- }
+  setComparing([]); // clear highlights at the end
+};

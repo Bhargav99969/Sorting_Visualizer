@@ -1,22 +1,19 @@
+export const BubbleSort = async (arr, setArr, setComparing, speed) => {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const n = arr.length;
 
-export const BubbleSort=async(arr,setArr,setcomparing)=>{
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      setComparing([j, j + 1]); // highlight the comparison
+      await sleep(speed);
 
-     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-
-    const n=arr.length
-    for(let i=0;i<n;i++){
-     for(let j=0;j< n-i;j++){
-        setcomparing([j, j + 1]);
-        await sleep(100)
-        if(arr[j]>arr[j+1]){
-            let temp=arr[j];
-            arr[j]=arr[j+1];
-            arr[j+1]=temp;
-            setArr([...arr]);
-            await sleep(100)
-        }
-     }
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; // swap
+        setArr([...arr]);
+        await sleep(speed);
+      }
     }
-setcomparing([]);
-}
+  }
+
+  setComparing([]); 
+};
